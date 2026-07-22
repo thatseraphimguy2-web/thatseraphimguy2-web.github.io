@@ -56,11 +56,11 @@ const voices = [
     files: ['poor_clip1.mp3', 'poor_clip2.mp3', 'poor_clip3.mp3', 'poor_clip4.mp3']
   },
   { 
-    name: 'Scared', 
+    name: 'Feral', 
     icon: '👽', 
     cheerCost: 200,
-    folder: 'audio/scared', 
-    files: ['scared_clip1.mp3', 'scared_clip2.mp3', 'scared_clip3.mp3', 'scared_clip4.mp3']
+    folder: 'audio/feral', 
+    files: ['feral_clip1.mp3', 'feral_clip2.mp3', 'feral_clip3.mp3', 'feral_clip4.mp3']
   },
   { 
     name: 'Sexy', 
@@ -83,7 +83,7 @@ const voices = [
 | Nerd      | mrQhZWGbb2k9qWJb5qeA |
 | Old       | 6sFKzaJr574YWVu4UuJF |
 | Poor      | 2ajXGJNYBR0iNHpS4VZb |
-| Scared    | dOdGri2hgsKdUEaU09Ct |
+| Feral     | qhH5VOAvpCwvNpmn2srO |
 | Sexy      | flHkNRp1BlvT73UL6gyz |
 |----------------------------------|
 */
@@ -97,7 +97,7 @@ const voiceIconMap = {
   'Nerd': 'images/nerd.png',
   'Old': 'images/old.png',
   'Poor': 'images/poor.png',
-  'Scared': 'images/scared.png',
+  'Feral': 'images/feral.png',
   'Sexy': 'images/sexy.png',
 };
 
