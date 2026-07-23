@@ -32,29 +32,6 @@ header {
     margin-bottom: 28px; 
 }
 
-.eyebrow {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--live);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 10px;
-}
-.dot { 
-    width: 7px; 
-    height: 7px; 
-    border-radius: 50%; 
-    background: var(--live); 
-    animation: pulse 1.8s ease-in-out infinite; 
-}
-
-@keyframes pulse {
-     0%,100% { opacity: 1; } 50% { opacity: 0.35; } 
-}
-
 h1 {
     font-family: 'the bubble letters', sans-serif;
     font-weight: 700;
@@ -67,8 +44,7 @@ h1 {
 header p {
     color: var(--text-dim);
     font-size: 15px; 
-    margin: 0; 
-    max-width: 52ch; 
+    margin: 0;
 }
 
 .panel {
@@ -109,7 +85,7 @@ header p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 2px;
 }
 
 .voice-btn:hover {
@@ -117,11 +93,13 @@ header p {
 }
 
 .voice-btn:focus-visible {
-    outline: 2px solid var(--accent); outline-offset: 1px; 
+    outline: 2px solid var(--accent); 
+    outline-offset: 1px; 
 }
 
 .voice-btn.active {
-    border-color: var(--accent); background: rgba(255,107,74,0.1); 
+    border-color: var(--accent); 
+    background: rgba(255,107,74,0.1); 
 }
 
 .voice-btn .tag {
@@ -132,7 +110,7 @@ header p {
 }
 
 .voice-btn.active .tag {
-     color: var(--accent); 
+    color: var(--accent); 
 }
 
 .voice-btn .icon-row {
@@ -142,16 +120,12 @@ header p {
     gap: 6px;
 }
 
-.voice-btn .icon-row .emoji {
-    font-size: 26px;
-    line-height: 1;
-}
-
 .voice-btn .icon-row img {
-    width: 48px;
-    height: 60px;
+    width: 72px;
+    height: 90px;
     object-fit: contain;
     border-radius: 6px;
+    margin-right: 15px;
 }
 
 textarea {
@@ -165,27 +139,6 @@ textarea {
     padding: 12px 14px;
     resize: none;
     min-height: 84px;
-}
-
-.number-panel {
-    width: 100%;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    margin-bottom: 18px;
-}
-
-#numberInput {
-    width: 100%;
-    background: var(--panel-raised);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 20px;
-    padding: 12px 14px;
-    resize: none;
 }
 
 ::placeholder {
@@ -324,48 +277,4 @@ button.primary.playing {
 
 .output-panel.copied .copy-hint { 
     color: var(--live); 
-}
-
-details { 
-    margin-top: 4px; 
-}
-
-summary {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text-faint);
-    cursor: pointer;
-    user-select: none;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-
-.format-row { 
-    margin-top: 10px; 
-    display: flex; 
-    gap: 8px; 
-    align-items: center; 
-}
-
-.format-row input {
-    flex: 1;
-    background: var(--panel-raised);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    padding: 8px 10px;
-}
-
-.format-row input:focus { 
-    outline: none; 
-    border-color: var(--accent); 
-}
-
-.hint { 
-    font-size: 12px; 
-    color: var(--text-faint); 
-    margin-top: 8px; 
-    line-height: 1.5; 
 }

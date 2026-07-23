@@ -1,72 +1,72 @@
 const voices = [
-  { 
-    name: 'Gold', 
-    icon: '🪙',
+  {
+    name: 'Gold',
+    image: 'images/gold.png',
     cheerCost: 1000,
-    folder: 'audio/gold', 
+    folder: 'audio/gold',
     files: ['gold_clip1.mp3', 'gold_clip2.mp3', 'gold_clip3.mp3', 'gold_clip4.mp3']
   },
-  { 
-    name: 'Normal', 
-    icon: '🐿️', 
+  {
+    name: 'Normal',
+    image: 'images/normal.png',
     cheerCost: 200,
-    folder: 'audio/normal', 
-    files: ['normal_clip1.mp3', 'normal_clip2.mp3', 'normal_clip3.mp3', 'normal_clip4.mp3'] 
+    folder: 'audio/normal',
+    files: ['normal_clip1.mp3', 'normal_clip2.mp3', 'normal_clip3.mp3', 'normal_clip4.mp3']
   },
-  { 
-    name: 'Buff', 
-    icon: '💪', 
+  {
+    name: 'Buff',
+    image: 'images/buff.png',
     cheerCost: 200,
-    folder: 'audio/buff', 
-    files: ['buff_clip1.mp3', 'buff_clip2.mp3', 'buff_clip3.mp3', 'buff_clip4.mp3'] 
+    folder: 'audio/buff',
+    files: ['buff_clip1.mp3', 'buff_clip2.mp3', 'buff_clip3.mp3', 'buff_clip4.mp3']
   },
-  { 
-    name: 'Cowboy', 
-    icon: '🤠', 
+  {
+    name: 'Cowboy',
+    image: 'images/cowboy.png',
     cheerCost: 200,
-    folder: 'audio/cowboy', 
-    files: ['cowboy_clip1.mp3', 'cowboy_clip2.mp3', 'cowboy_clip3.mp3', 'cowboy_clip4.mp3'] 
+    folder: 'audio/cowboy',
+    files: ['cowboy_clip1.mp3', 'cowboy_clip2.mp3', 'cowboy_clip3.mp3', 'cowboy_clip4.mp3']
   },
-  { 
-    name: 'Cult', 
-    icon: '🔥', 
+  {
+    name: 'Cult',
+    image: 'images/cult.png',
     cheerCost: 200,
-    folder: 'audio/cult', 
-    files: ['cult_clip1.mp3', 'cult_clip2.mp3', 'cult_clip3.mp3', 'cult_clip4.mp3'] 
+    folder: 'audio/cult',
+    files: ['cult_clip1.mp3', 'cult_clip2.mp3', 'cult_clip3.mp3', 'cult_clip4.mp3']
   },
-  { 
-    name: 'Nerd', 
-    icon: '📖', 
+  {
+    name: 'Nerd',
+    image: 'images/nerd.png',
     cheerCost: 200,
-    folder: 'audio/nerd', 
+    folder: 'audio/nerd',
     files: ['nerd_clip1.mp3', 'nerd_clip2.mp3', 'nerd_clip3.mp3', 'nerd_clip4.mp3']
   },
-  { 
-    name: 'Old', 
-    icon: '🧓', 
+  {
+    name: 'Old',
+    image: 'images/old.png',
     cheerCost: 200,
-    folder: 'audio/old', 
+    folder: 'audio/old',
     files: ['old_clip1.mp3', 'old_clip2.mp3', 'old_clip3.mp3', 'old_clip4.mp3']
   },
-  { 
-    name: 'Poor', 
-    icon: '💸', 
+  {
+    name: 'Poor',
+    image: 'images/poor.png',
     cheerCost: 200,
-    folder: 'audio/poor', 
+    folder: 'audio/poor',
     files: ['poor_clip1.mp3', 'poor_clip2.mp3', 'poor_clip3.mp3', 'poor_clip4.mp3']
   },
-  { 
-    name: 'Feral', 
-    icon: '👽', 
+  {
+    name: 'Feral',
+    image: 'images/feral.png',
     cheerCost: 200,
-    folder: 'audio/feral', 
+    folder: 'audio/feral',
     files: ['feral_clip1.mp3', 'feral_clip2.mp3', 'feral_clip3.mp3', 'feral_clip4.mp3']
   },
-  { 
-    name: 'Sexy', 
-    icon: '👠', 
+  {
+    name: 'Sexy',
+    image: 'images/sexy.png',
     cheerCost: 200,
-    folder: 'audio/sexy', 
+    folder: 'audio/sexy',
     files: ['sexy_clip1.mp3', 'sexy_clip2.mp3', 'sexy_clip3.mp3', 'sexy_clip4.mp3']
   },
 ];
@@ -88,19 +88,6 @@ const voices = [
 |----------------------------------|
 */
 
-const voiceIconMap = {
-  'Normal': 'images/normal.png',
-  'Buff': 'images/buff.png',
-  'Cowboy': 'images/cowboy.png',
-  'Cult': 'images/cult.png',
-  'Gold': 'images/gold.png',
-  'Nerd': 'images/nerd.png',
-  'Old': 'images/old.png',
-  'Poor': 'images/poor.png',
-  'Feral': 'images/feral.png',
-  'Sexy': 'images/sexy.png',
-};
-
 let selectedIndex = 0;
 let isPlaying = false;
 let currentAudio = null;
@@ -114,18 +101,14 @@ const outputPanel = document.getElementById('output-panel');
 const cmdText = document.getElementById('cmd-text');
 const copyHint = document.getElementById('copy-hint');
 const formatInput = document.getElementById('format-input');
-//const cheerAmount = document.getElementById('numberInput');
 
 function buildGrid() {
   grid.innerHTML = '';
   voices.forEach((v, i) => {
     const btn = document.createElement('button');
     btn.className = 'voice-btn' + (i === selectedIndex ? ' active' : '');
-    const imgPath = voiceIconMap[v.name];
-    const iconHtml = imgPath
-      ? '<img src="' + imgPath + '" alt="" onerror="this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'emoji\',textContent:\'' + v.icon + '\'}))">'
-      : '<span class="emoji">' + v.icon + '</span>';
-    btn.innerHTML = '<span class="icon-row">' + iconHtml + v.name + '</span><span class="tag">' + "Minimum " + v.cheerCost + " bits" + '</span>';
+    const iconHTML = '<img src="' + v.image + '">';
+    btn.innerHTML = '<span class="icon-row">' + iconHTML + v.name + '</span><span class="tag">' + /*"Minimum " +*/ v.cheerCost + " bits" + '</span>';
     btn.addEventListener('click', () => {
       stopPreview();
       selectedIndex = i;
@@ -147,7 +130,6 @@ function updateOutput() {
   const voiceName = voices[selectedIndex].name;
   const text = textInput.value.trim() || '';
   const minimumCheer = voices[selectedIndex].cheerCost;
-  //let amountCheered = cheerAmount > minimumCheer ? cheerAmount : minimumCheer;
   cmdText.textContent = template.replace('{cheerAmount}', minimumCheer).replace('{voice}', voiceName).replace('{text}', text);
 }
 
@@ -166,7 +148,7 @@ function stopPreview() {
 function playPreview() {
   const voice = voices[selectedIndex];
   if (!voice.files || !voice.files.length) {
-    cmdText.textContent = 'No clips found for ' + voice.name + ' — add filenames to the files list.';
+    cmdText.textContent = 'No clips found for ' + voice.name + ' — Seraphim did a whoopsie. Go yell at him.';
     return;
   }
   const file = voice.files[Math.floor(Math.random() * voice.files.length)];

@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Sonny's Campfire Stories</title>
+    <title>Come Bark at Sonne!</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,9 +20,9 @@
 <body>
   <div class="wrap">
     <header>
-      <!--<p class="eyebrow"><span class="dot"></span>on air</p>-->
-      <h1>Sonny's Campfire Stories</h1>
-      <p>Pick a voice, preview it, then copy the command into chat.</p>
+      <h1>Come Bark at Sonne!</h1>
+      <p>Pick a voice, preview it, then write what you want to say!</p>
+      <p>Click and copy into Twitch chat to trigger TTS on stream.</p>
     </header>
 
     <div class="panel">
@@ -41,14 +41,9 @@
         <span class="charcount" id="charcount"></span>
       </div>
     </div>
-<!--
-    <div class="number-panel">
-      <p class="panel-label">03 - cheer amount</p>
-      <input type="number" id="numberInput" min="200" value=200>
-    </div>
-  -->
+
     <div class="panel">
-      <p class="panel-label">04 — copy to chat</p>
+      <p class="panel-label">03 — copy to chat</p>
       <div class="output-panel" id="output-panel" tabindex="0" role="button" aria-label="Copy chat command">
         <span class="cmd" id="cmd-text"></span>
         <span class="copy-hint" id="copy-hint">click to copy</span>
@@ -58,7 +53,6 @@
         <div class="format-row">
           <input type="text" id="format-input" value="cheer{cheerAmount} [{voice}:v2] {text}" spellcheck="false">
         </div>
-        <p class="hint">Match this to whatever your Twitch bot expects — {voice} and {text} get swapped in.</p>
       </details>
     </div>
   </div>
