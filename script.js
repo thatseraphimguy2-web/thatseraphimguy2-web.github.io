@@ -75,16 +75,16 @@ const voices = [
 |----------------------------------|
 | Character | Voice ID             |
 |----------------------------------|
-| Normal    | UgBBYS2sOqTuMpoF3BR0 |
+| Normal    | eh3mW70o6niXfNTuBPbY |
 | Buff      | TxWZERZ5Hc6h9dGxVmXa |
 | Cowboy    | ruirxsoakN0GWmGNIo04 |
 | Cult      | cPoqAvGWCPfCfyPMwe4z |
 | Gold      | 6aO1exAR9bDruq155LzQ |
 | Nerd      | mrQhZWGbb2k9qWJb5qeA |
-| Old       | 6sFKzaJr574YWVu4UuJF |
-| Poor      | 2ajXGJNYBR0iNHpS4VZb |
+| Old       | MKlLqCItoCkvdhrxgtLv |
+| Poor      | cLCuNe0GeCZkd2MXpQWN |
 | Feral     | qhH5VOAvpCwvNpmn2srO |
-| Sexy      | flHkNRp1BlvT73UL6gyz |
+| Sexy      | j05EIz3iI3JmBTWC3CsA |
 |----------------------------------|
 */
 
