@@ -181,32 +181,49 @@ function setupTagDragging() {
 
     tagColumns.querySelectorAll('.row').forEach(row => {
 
-        row.addEventListener('pointerdown', e => {
-            e.preventDefault();
+      row.addEventListener('pointerdown', e => {
+          e.preventDefault();
 
-            draggedText = row.dataset.text;
-            dragging = true;
+          draggedText = row.dataset.text;
+          dragging = true;
 
-            row.setPointerCapture(e.pointerId);
-            row.classList.add('dragging');
+          row.setPointerCapture(e.pointerId);
+          row.classList.add('dragging');
 
-            document.body.classList.add('dragging');
-        });
+          document.body.classList.add('dragging');
 
-        row.addEventListener('pointermove', e => {
-            if (!dragging) return;
+          const ghost = document.createElement('div');
+          ghost.className = 'drag-ghost';
+          ghost.textContent = draggedText;
+          ghost.id = 'drag-ghost';
 
-            const target = document.elementFromPoint(
-                e.clientX,
-                e.clientY
-            );
+          document.body.appendChild(ghost);
 
-            if (target === textarea || target?.closest('#text-input')) {
-                textarea.classList.add('drop-target');
-            } else {
-                textarea.classList.remove('drop-target');
-            }
-        });
+          ghost.style.left = `${e.clientX}px`;
+          ghost.style.top = `${e.clientY}px`;
+      });
+
+      row.addEventListener('pointermove', e => {
+          if (!dragging) return;
+
+          const ghost = document.getElementById('drag-ghost');
+
+          if (ghost) {
+              ghost.style.left = `${e.clientX}px`;
+              ghost.style.top = `${e.clientY}px`;
+          }
+
+          const target = document.elementFromPoint(
+              e.clientX,
+              e.clientY
+          );
+
+          if (target === textarea || target?.closest('#text-input')) {
+              textarea.classList.add('drop-target');
+          } else {
+              textarea.classList.remove('drop-target');
+          }
+      });
 
         row.addEventListener('pointerup', e => {
             if (!dragging) return;
@@ -238,6 +255,12 @@ function setupTagDragging() {
 
             document.body.classList.remove('dragging');
             textarea.classList.remove('drop-target');
+
+            const ghost = document.getElementById('drag-ghost');
+
+            if (ghost) {
+                ghost.remove();
+            }
         }
     });
 };
