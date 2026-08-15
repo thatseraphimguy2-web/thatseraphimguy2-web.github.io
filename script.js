@@ -1,69 +1,59 @@
 const voices = [
-  {
-    name: 'Gold',
+  { name: 'Gold',
     image: 'images/gold.png',
     cheerCost: 1000,
     folder: 'audio/gold',
     files: ['gold_clip1.mp3', 'gold_clip2.mp3', 'gold_clip3.mp3', 'gold_clip4.mp3']
   },
-  {
-    name: 'Normal',
+  { name: 'Normal',
     image: 'images/normal.png',
     cheerCost: 200,
     folder: 'audio/normal',
     files: ['normal_clip1.mp3', 'normal_clip2.mp3', 'normal_clip3.mp3', 'normal_clip4.mp3']
   },
-  {
-    name: 'Buff',
+  { name: 'Buff',
     image: 'images/buff.png',
     cheerCost: 200,
     folder: 'audio/buff',
     files: ['buff_clip1.mp3', 'buff_clip2.mp3', 'buff_clip3.mp3', 'buff_clip4.mp3']
   },
-  {
-    name: 'Cowboy',
+  { name: 'Cowboy',
     image: 'images/cowboy.png',
     cheerCost: 200,
     folder: 'audio/cowboy',
     files: ['cowboy_clip1.mp3', 'cowboy_clip2.mp3', 'cowboy_clip3.mp3', 'cowboy_clip4.mp3']
   },
-  {
-    name: 'Cult',
+  { name: 'Cult',
     image: 'images/cult.png',
     cheerCost: 200,
     folder: 'audio/cult',
     files: ['cult_clip1.mp3', 'cult_clip2.mp3', 'cult_clip3.mp3', 'cult_clip4.mp3']
   },
-  {
-    name: 'Nerd',
+  { name: 'Nerd',
     image: 'images/nerd.png',
     cheerCost: 200,
     folder: 'audio/nerd',
     files: ['nerd_clip1.mp3', 'nerd_clip2.mp3', 'nerd_clip3.mp3', 'nerd_clip4.mp3']
   },
-  {
-    name: 'Old',
+  { name: 'Old',
     image: 'images/old.png',
     cheerCost: 200,
     folder: 'audio/old',
     files: ['old_clip1.mp3', 'old_clip2.mp3', 'old_clip3.mp3', 'old_clip4.mp3']
   },
-  {
-    name: 'Poor',
+  { name: 'Poor',
     image: 'images/poor.png',
     cheerCost: 200,
     folder: 'audio/poor',
     files: ['poor_clip1.mp3', 'poor_clip2.mp3', 'poor_clip3.mp3', 'poor_clip4.mp3']
   },
-  {
-    name: 'Feral',
+  { name: 'Feral',
     image: 'images/feral.png',
     cheerCost: 200,
     folder: 'audio/feral',
     files: ['feral_clip1.mp3', 'feral_clip2.mp3', 'feral_clip3.mp3', 'feral_clip4.mp3']
   },
-  {
-    name: 'Sexy',
+  { name: 'Sexy',
     image: 'images/sexy.png',
     cheerCost: 200,
     folder: 'audio/sexy',
@@ -71,29 +61,84 @@ const voices = [
   },
 ];
 
-/* ElevenLabs voice ID map:
-|----------------------------------|
-| Character | Voice ID             |
-|----------------------------------|
-| Normal    | eh3mW70o6niXfNTuBPbY |
-| Buff      | TxWZERZ5Hc6h9dGxVmXa |
-| Cowboy    | ruirxsoakN0GWmGNIo04 |
-| Cult      | cPoqAvGWCPfCfyPMwe4z |
-| Gold      | 6aO1exAR9bDruq155LzQ |
-| Nerd      | mrQhZWGbb2k9qWJb5qeA |
-| Old       | MKlLqCItoCkvdhrxgtLv |
-| Poor      | cLCuNe0GeCZkd2MXpQWN |
-| Feral     | qhH5VOAvpCwvNpmn2srO |
-| Sexy      | j05EIz3iI3JmBTWC3CsA |
-|----------------------------------|
-*/
+const tags = [
+  {
+    cat: "Emotion", key: "emotion", items: [
+      ["[sarcastic]"],
+      ["[deadpan]"],
+      ["[dry]"],
+      ["[mocking]"],
+      ["[teasing]"],
+      ["[playful]"],
+      ["[excited]"],
+      ["[enthusiastic]"],
+      ["[shocked]"],
+      ["[amazed]"],
+      ["[nervous]"],
+      ["[confused]"],
+      ["[uncertain]"],
+      ["[happily]"],
+      ["[sad]"],
+      ["[angry]"],
+      ["[curious]"],
+      ["[frustrated]"],
+      ["[annoyed]"],
+      ["[delighted]"],
+      ["[impressed]"],
+      ["[surprised]"],
+      ["[confidently]"],
+      ["[calmly]"]
+    ]
+  },
+
+  {
+    cat: "Delivery", key: "delivery", items: [
+      ["[laughing]"],
+      ["[wheezing]"],
+      ["[stammering]"],
+      ["[sings]"],
+      ["[whispering]"],
+      ["[shouting]"],
+      ["[rapidly]"],
+      ["[slowly]"],
+      ["[drawn out]"],
+      ["[pause]"],
+      ["[long pause]"],
+      ["[crying]"],
+    ]
+  },
+
+  {
+    cat: "Sound Effect", key: "effect", items: [
+      ["[clears throat]"],
+      ["[laughs]"],
+      ["[sighs]"],
+      ["[gasps]"],
+      ["[gulps]"],
+      ["[swallows]"],
+      ["[coughs]"],
+      ["[groan]"],
+      ["[scream]"],
+      ["[snorts]"],
+      ["[fart]"],
+      ["[woo]"],
+      ["[gunshot]"],
+      ["[applause]"],
+      ["[clapping]"],
+      ["[explosion]"]
+    ]
+  },
+];
 
 let selectedIndex = 0;
 let isPlaying = false;
 let currentAudio = null;
 
 const grid = document.getElementById('voice-grid');
+const voiceStyles = document.querySelectorAll(".style");
+const soundEffects = document.querySelectorAll(".effect");
 const textInput = document.getElementById('text-input');
+const numberInput = document.getElementById('bits-input')
 const charcount = document.getElementById('charcount');
 const previewBtn = document.getElementById('preview-btn');
 const vu = document.getElementById('vu');
@@ -102,35 +147,92 @@ const cmdText = document.getElementById('cmd-text');
 const copyHint = document.getElementById('copy-hint');
 const formatInput = document.getElementById('format-input');
 
+function render() {
+  const tagColumns = document.getElementById('tag-columns');
+
+  let html = '';
+
+  tags.forEach(group => {
+    html += `
+      <div class="tag-column">
+        <div class="cat-label">${group.cat}</div>
+    `;
+
+    group.items.forEach(([tag]) => {
+      html += `
+        <div class="row" draggable="true" data-text="${tag}">
+          <span class="tag">${tag}</span>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  tagColumns.innerHTML = html;
+
+  tagColumns.querySelectorAll('.row').forEach(row => {
+    row.addEventListener('dragstart', e => {
+      e.dataTransfer.setData(
+        'text/plain',
+        row.dataset.text
+      );
+
+      document.body.classList.add('dragging');
+    });
+
+    row.addEventListener('dragend', () => {
+      document.body.classList.remove('dragging');
+    });
+  });
+};
+
 function buildGrid() {
   grid.innerHTML = '';
+
   voices.forEach((v, i) => {
     const btn = document.createElement('button');
     btn.className = 'voice-btn' + (i === selectedIndex ? ' active' : '');
     const iconHTML = '<img src="' + v.image + '">';
-    btn.innerHTML = '<span class="icon-row">' + iconHTML + v.name + '</span><span class="tag">' + /*"Minimum " +*/ v.cheerCost + " bits" + '</span>';
+    btn.innerHTML = '<span class="icon-row">' + iconHTML + v.name + '</span><span class="tag">' + "(Minimum " + v.cheerCost + " bits)" + '</span>';
     btn.addEventListener('click', () => {
       stopPreview();
       selectedIndex = i;
+      setMinimum(v.cheerCost);
       buildGrid();
       updateOutput();
     });
+
     grid.appendChild(btn);
+
   });
+}
+
+function setMinimum(minValue) {
+  const input = document.getElementById('bits-input');
+  input.min = minValue;
+  input.value = minValue;
 }
 
 function updateCharcount() {
   const len = textInput.value.length;
-  charcount.textContent = len + ' / 200';
-  charcount.classList.toggle('over', len > 180);
+  charcount.textContent = len + ' / 400';
+  charcount.classList.toggle('over', len > 380);
 }
 
 function updateOutput() {
   const template = formatInput.value || '{cheerAmount} {voice}: {text}';
   const voiceName = voices[selectedIndex].name;
   const text = textInput.value.trim() || '';
+  const bitsInput = document.getElementById('bits-input');
   const minimumCheer = voices[selectedIndex].cheerCost;
-  cmdText.textContent = template.replace('{cheerAmount}', minimumCheer).replace('{voice}', voiceName).replace('{text}', text);
+  if (bitsInput.value < minimumCheer || bitsInput == "") {
+    bitsToCheer = minimumCheer;
+  }
+  else {
+    bitsToCheer = bitsInput.value;
+    }
+  cmdText.textContent = template.replace('{cheerAmount}', bitsToCheer).replace('{voice}', voiceName).replace('{text}', text);
 }
 
 function stopPreview() {
@@ -174,7 +276,34 @@ previewBtn.addEventListener('click', () => {
   }
 });
 
+textInput.addEventListener("dragover", e => {
+    e.preventDefault();
+});
+
+textInput.addEventListener("drop", e => {
+  e.preventDefault();
+  const text = e.dataTransfer.getData("text/plain");
+
+  textInput.focus();
+
+  const start = textInput.selectionStart;
+  const end = textInput.selectionEnd;
+
+  textInput.value =
+      textInput.value.substring(0, start) +
+      text +
+      textInput.value.substring(end);
+
+  const pos = start + text.length;
+  textInput.selectionStart = pos;
+  textInput.selectionEnd = pos;
+
+  updateCharcount();
+  updateOutput();
+});
+
 textInput.addEventListener('input', () => { updateCharcount(); updateOutput(); });
+numberInput.addEventListener('input', updateOutput)
 formatInput.addEventListener('input', updateOutput);
 
 outputPanel.addEventListener('click', () => {
@@ -192,6 +321,7 @@ outputPanel.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); outputPanel.click(); }
 });
 
+render();
 buildGrid();
 updateCharcount();
 updateOutput();

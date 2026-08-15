@@ -28,15 +28,30 @@
     <div class="panel">
       <p class="panel-label">01 — voice</p>
       <div id="voice-grid"></div>
-    </div>
-
-    <div class="panel">
-      <p class="panel-label">02 — preview and text</p>
       <div class="controls-row">
         <button class="primary" id="preview-btn">▶ Preview voice</button>
         <div class="vu" id="vu"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="bitinputs-container">
+        <p class="bitsinput-label">Bits to cheer:</p>
+        <input
+            type="number"
+            id="bits-input"
+            name="bits-input"
+            class="bits-input"
+            min="0">
+        </div>
       </div>
-      <textarea id="text-input" maxlength="200" placeholder="Enter your text here!" style="margin-top:14px;"></textarea>
+    </div>
+
+    <div class="panel">
+      <p class="panel-label">02 — effects and text</p>
+      <p class="panel-label">(click and drag effects to move them to the text box)</p>
+      <div class="tag-columns" id="tag-columns"></div>
+      <textarea
+          id="text-input"
+          class="text-entry"
+          maxlength="400"
+          placeholder="Enter your text here!"></textarea>
       <div class="row-between">
         <span class="charcount" id="charcount"></span>
       </div>
@@ -51,7 +66,7 @@
       <details hidden>
         <summary>Command format</summary>
         <div class="format-row">
-          <input type="text" id="format-input" value="cheer{cheerAmount} [{voice}:v2] {text}" spellcheck="false">
+          <input type="text" id="format-input" value="cheer{cheerAmount} [{voice}:v3] {text}" spellcheck="false">
         </div>
       </details>
     </div>

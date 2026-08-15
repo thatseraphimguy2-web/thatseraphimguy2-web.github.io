@@ -1,0 +1,14 @@
+|----------------------------------|
+| Character | Voice ID             |
+|----------------------------------|
+| Normal    | eh3mW70o6niXfNTuBPbY |
+| Buff      | TxWZERZ5Hc6h9dGxVmXa |
+| Cowboy    | ruirxsoakN0GWmGNIo04 |
+| Cult      | cPoqAvGWCPfCfyPMwe4z |
+| Gold      | 6aO1exAR9bDruq155LzQ |
+| Nerd      | mrQhZWGbb2k9qWJb5qeA |
+| Old       | MKlLqCItoCkvdhrxgtLv |
+| Poor      | cLCuNe0GeCZkd2MXpQWN |
+| Feral     | qhH5VOAvpCwvNpmn2srO |
+| Sexy      | j05EIz3iI3JmBTWC3CsA |
+|----------------------------------|
