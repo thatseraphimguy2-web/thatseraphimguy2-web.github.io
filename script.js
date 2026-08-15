@@ -160,7 +160,7 @@ function render() {
 
     group.items.forEach(([tag]) => {
       html += `
-        <div class="row" draggable="true" data-text="${tag}">
+        <div class="row" data-text="${tag}">
           <span class="tag">${tag}</span>
         </div>
       `;
@@ -170,21 +170,96 @@ function render() {
   });
 
   tagColumns.innerHTML = html;
+};
 
-  tagColumns.querySelectorAll('.row').forEach(row => {
-    row.addEventListener('dragstart', e => {
-      e.dataTransfer.setData(
-        'text/plain',
-        row.dataset.text
-      );
+function setupTagDragging() {
+    const tagColumns = document.getElementById('tag-columns');
+    const textarea = document.getElementById('text-input');
 
-      document.body.classList.add('dragging');
+    let draggedText = null;
+    let dragging = false;
+
+    tagColumns.querySelectorAll('.row').forEach(row => {
+
+        row.addEventListener('pointerdown', e => {
+            e.preventDefault();
+
+            draggedText = row.dataset.text;
+            dragging = true;
+
+            row.setPointerCapture(e.pointerId);
+            row.classList.add('dragging');
+
+            document.body.classList.add('dragging');
+        });
+
+        row.addEventListener('pointermove', e => {
+            if (!dragging) return;
+
+            const target = document.elementFromPoint(
+                e.clientX,
+                e.clientY
+            );
+
+            if (target === textarea || target?.closest('#text-input')) {
+                textarea.classList.add('drop-target');
+            } else {
+                textarea.classList.remove('drop-target');
+            }
+        });
+
+        row.addEventListener('pointerup', e => {
+            if (!dragging) return;
+
+            const target = document.elementFromPoint(
+                e.clientX,
+                e.clientY
+            );
+
+            if (
+                target === textarea ||
+                target?.closest('#text-input')
+            ) {
+                insertTagAtCursor(textarea, draggedText);
+            }
+
+            finishDragging(row);
+        });
+
+        row.addEventListener('pointercancel', () => {
+            finishDragging(row);
+        });
+
+        function finishDragging(row) {
+            dragging = false;
+            draggedText = null;
+
+            row.classList.remove('dragging');
+
+            document.body.classList.remove('dragging');
+            textarea.classList.remove('drop-target');
+        }
     });
+};
 
-    row.addEventListener('dragend', () => {
-      document.body.classList.remove('dragging');
-    });
-  });
+function insertTagAtCursor(textarea, text) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    textarea.value =
+        textarea.value.substring(0, start) +
+        text +
+        textarea.value.substring(end);
+
+    const newPosition = start + text.length;
+
+    textarea.focus();
+
+    textarea.selectionStart = newPosition;
+    textarea.selectionEnd = newPosition;
+
+    updateCharcount();
+    updateOutput();
 };
 
 function buildGrid() {
@@ -322,6 +397,7 @@ outputPanel.addEventListener('keydown', (e) => {
 });
 
 render();
+setupTagDragging();
 buildGrid();
 updateCharcount();
 updateOutput();

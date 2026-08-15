@@ -305,10 +305,15 @@ button.primary.playing {
 .row {
     display: flex;
     align-items: center;
+
     padding: 10px 12px;
+
     border-bottom: 1px solid #22252D;
+
     cursor: grab;
     user-select: none;
+    touch-action: none;
+
     transition: background .12s;
 }
 
@@ -333,6 +338,14 @@ button.primary.playing {
 
 body.dragging .tag-column {
     overflow: hidden;
+}
+
+.row.dragging {
+    opacity: 0.5;
+}
+
+.text-entry.drop-target {
+    outline: 2px solid var(--accent);
 }
 
 /*------------------------------Text Entry------------------------------*/
@@ -415,4 +428,21 @@ body.dragging .tag-column {
 
 .output-panel.copied .copy-hint {
     color: var(--live);
+}
+
+/*------------------------------Mobile Formatting------------------------------*/
+@media (max-width: 700px) {
+    .controls-row {
+        flex-wrap: wrap;
+    }
+
+    .bitinputs-container {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .bits-input {
+        width: 100%;
+        min-width: 0;
+    }
 }
