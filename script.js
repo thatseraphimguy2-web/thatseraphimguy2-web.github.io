@@ -182,39 +182,23 @@ function setupTagInteractions() {
   const tagColumns = document.getElementById('tag-columns');
 
   tagColumns.querySelectorAll('.row').forEach(row => {
-
-    // Desktop / mouse: native HTML5 drag-and-drop
     row.addEventListener('dragstart', e => {
       e.dataTransfer.setData('text/plain', row.dataset.text);
       e.dataTransfer.effectAllowed = 'copy';
     });
 
-    // Mobile / touch: tap to insert
     row.addEventListener('pointerup', e => {
       if (e.pointerType !== 'touch' && e.pointerType !== 'pen') {
         return;
       }
 
       insertTagAtCursor(
-        document.getElementById('text-input'),
+        textInput,
         row.dataset.text
       );
     });
-
   });
 }
-
-textInput.addEventListener('dragover', e => {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'copy';
-});
-
-textInput.addEventListener('drop', e => {
-  e.preventDefault();
-  const text = e.dataTransfer.getData('text/plain');
-  if (!text) return;
-  insertTagAtCursor(textInput, text);
-});
 
 function insertTagAtCursor(textarea, text) {
   const start = textarea.selectionStart;
@@ -235,6 +219,21 @@ function insertTagAtCursor(textarea, text) {
   updateOutput();
 }
 
+textInput.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+});
+
+textInput.addEventListener('drop', e => {
+    e.preventDefault();
+
+    const text = e.dataTransfer.getData('text/plain');
+
+    if (!text) return;
+
+    insertTagAtCursor(textInput, text);
+});
+
 function buildGrid() {
   grid.innerHTML = '';
 
@@ -254,19 +253,19 @@ function buildGrid() {
     grid.appendChild(btn);
 
   });
-}
+};
 
 function setMinimum(minValue) {
   const input = document.getElementById('bits-input');
   input.min = minValue;
   input.value = minValue;
-}
+};
 
 function updateCharcount() {
   const len = textInput.value.length;
   charcount.textContent = len + ' / 400';
   charcount.classList.toggle('over', len > 380);
-}
+};
 
 function updateOutput() {
   const template = formatInput.value || '{cheerAmount} {voice}: {text}';
@@ -281,7 +280,7 @@ function updateOutput() {
     bitsToCheer = bitsInput.value;
     }
   cmdText.textContent = template.replace('{cheerAmount}', bitsToCheer).replace('{voice}', voiceName).replace('{text}', text);
-}
+};
 
 function stopPreview() {
   if (currentAudio) {
@@ -293,7 +292,7 @@ function stopPreview() {
   vu.classList.remove('playing');
   previewBtn.classList.remove('playing');
   previewBtn.textContent = '▶ Preview voice';
-}
+};
 
 function playPreview() {
   const voice = voices[selectedIndex];
@@ -314,7 +313,7 @@ function playPreview() {
   vu.classList.add('playing');
   previewBtn.classList.add('playing');
   previewBtn.textContent = '■ Stop';
-}
+};
 
 previewBtn.addEventListener('click', () => {
   if (isPlaying) {
@@ -323,29 +322,7 @@ previewBtn.addEventListener('click', () => {
     playPreview();
   }
 });
-/*
-textInput.addEventListener("drop", e => {
-  e.preventDefault();
-  const text = e.dataTransfer.getData("text/plain");
 
-  textInput.focus();
-
-  const start = textInput.selectionStart;
-  const end = textInput.selectionEnd;
-
-  textInput.value =
-      textInput.value.substring(0, start) +
-      text +
-      textInput.value.substring(end);
-
-  const pos = start + text.length;
-  textInput.selectionStart = pos;
-  textInput.selectionEnd = pos;
-
-  updateCharcount();
-  updateOutput();
-});
-*/
 textInput.addEventListener('input', () => { updateCharcount(); updateOutput(); });
 numberInput.addEventListener('input', updateOutput)
 formatInput.addEventListener('input', updateOutput);
@@ -366,7 +343,6 @@ outputPanel.addEventListener('keydown', (e) => {
 });
 
 render();
-setupTagDragging();
 buildGrid();
 updateCharcount();
 updateOutput();
