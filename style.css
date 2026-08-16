@@ -312,7 +312,6 @@ button.primary.playing {
 
     cursor: grab;
     user-select: none;
-    touch-action: none;
 
     transition: background .12s;
 }

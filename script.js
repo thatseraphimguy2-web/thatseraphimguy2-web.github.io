@@ -146,6 +146,8 @@ const outputPanel = document.getElementById('output-panel');
 const cmdText = document.getElementById('cmd-text');
 const copyHint = document.getElementById('copy-hint');
 const formatInput = document.getElementById('format-input');
+const DRAG_DELAY = 250;
+const DRAG_DISTANCE = 8;
 
 function render() {
   const tagColumns = document.getElementById('tag-columns');
@@ -176,57 +178,84 @@ function setupTagDragging() {
     const tagColumns = document.getElementById('tag-columns');
     const textarea = document.getElementById('text-input');
 
+    const DRAG_DELAY = 250;
+    const DRAG_DISTANCE = 8;
+
     let draggedText = null;
     let dragging = false;
+    let pendingDrag = false;
+
+    let dragTimer = null;
+    let startX = 0;
+    let startY = 0;
+    let activeRow = null;
+    let activePointerId = null;
 
     tagColumns.querySelectorAll('.row').forEach(row => {
 
-      row.addEventListener('pointerdown', e => {
-          e.preventDefault();
+        row.addEventListener('pointerdown', e => {
+            if (e.pointerType === 'mouse' && e.button !== 0) {
+                return;
+            }
 
-          draggedText = row.dataset.text;
-          dragging = true;
+            activeRow = row;
+            activePointerId = e.pointerId;
 
-          row.setPointerCapture(e.pointerId);
-          row.classList.add('dragging');
+            startX = e.clientX;
+            startY = e.clientY;
 
-          document.body.classList.add('dragging');
+            draggedText = row.dataset.text;
+            pendingDrag = true;
+            dragging = false;
 
-          const ghost = document.createElement('div');
-          ghost.className = 'drag-ghost';
-          ghost.textContent = draggedText;
-          ghost.id = 'drag-ghost';
+            row.setPointerCapture(e.pointerId);
 
-          document.body.appendChild(ghost);
+            /*
+             * Mouse users get the drag immediately.
+             * Touch/stylus users must hold briefly before drag begins.
+             */
+            if (e.pointerType === 'mouse') {
+                startDragging(e);
+            } else {
+                dragTimer = setTimeout(() => {
+                    if (pendingDrag && activeRow) {
+                        startDragging({
+                            clientX: startX,
+                            clientY: startY
+                        });
+                    }
+                }, DRAG_DELAY);
+            }
+        });
 
-          ghost.style.left = `${e.clientX}px`;
-          ghost.style.top = `${e.clientY}px`;
-      });
+        row.addEventListener('pointermove', e => {
+            if (!pendingDrag || e.pointerId !== activePointerId) {
+                return;
+            }
 
-      row.addEventListener('pointermove', e => {
-          if (!dragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            const distance = Math.hypot(dx, dy);
 
-          const ghost = document.getElementById('drag-ghost');
+            /*
+             * If the user moves before the delay expires,
+             * assume they're trying to scroll rather than drag.
+             */
+            if (!dragging && distance > DRAG_DISTANCE) {
+                cancelPendingDrag();
+                return;
+            }
 
-          if (ghost) {
-              ghost.style.left = `${e.clientX}px`;
-              ghost.style.top = `${e.clientY}px`;
-          }
+            if (!dragging) {
+                return;
+            }
 
-          const target = document.elementFromPoint(
-              e.clientX,
-              e.clientY
-          );
+            const ghost = document.getElementById('drag-ghost');
 
-          if (target === textarea || target?.closest('#text-input')) {
-              textarea.classList.add('drop-target');
-          } else {
-              textarea.classList.remove('drop-target');
-          }
-      });
-
-        row.addEventListener('pointerup', e => {
-            if (!dragging) return;
+            if (ghost) {
+                ghost.style.left = `${e.clientX}px`;
+                ghost.style.top = `${e.clientY}px`;
+            }
 
             const target = document.elementFromPoint(
                 e.clientX,
@@ -237,21 +266,76 @@ function setupTagDragging() {
                 target === textarea ||
                 target?.closest('#text-input')
             ) {
+                textarea.classList.add('drop-target');
+            } else {
+                textarea.classList.remove('drop-target');
+            }
+        });
+
+        row.addEventListener('pointerup', e => {
+            if (e.pointerId !== activePointerId) {
+                return;
+            }
+
+            clearTimeout(dragTimer);
+
+            if (
+                dragging &&
+                (
+                    e.target === textarea ||
+                    document.elementFromPoint(
+                        e.clientX,
+                        e.clientY
+                    )?.closest('#text-input')
+                )
+            ) {
                 insertTagAtCursor(textarea, draggedText);
             }
 
-            finishDragging(row);
+            finishDragging();
         });
 
         row.addEventListener('pointercancel', () => {
-            finishDragging(row);
+            finishDragging();
         });
 
-        function finishDragging(row) {
+        function startDragging(e) {
+            pendingDrag = false;
+            dragging = true;
+
+            activeRow.classList.add('dragging');
+            document.body.classList.add('dragging');
+
+            const ghost = document.createElement('div');
+            ghost.className = 'drag-ghost';
+            ghost.id = 'drag-ghost';
+            ghost.textContent = draggedText;
+
+            document.body.appendChild(ghost);
+
+            ghost.style.left = `${e.clientX}px`;
+            ghost.style.top = `${e.clientY}px`;
+        }
+
+        function cancelPendingDrag() {
+            clearTimeout(dragTimer);
+
+            pendingDrag = false;
             dragging = false;
             draggedText = null;
+            activeRow = null;
+            activePointerId = null;
+        }
 
-            row.classList.remove('dragging');
+        function finishDragging() {
+            clearTimeout(dragTimer);
+
+            pendingDrag = false;
+            dragging = false;
+
+            if (activeRow) {
+                activeRow.classList.remove('dragging');
+            }
 
             document.body.classList.remove('dragging');
             textarea.classList.remove('drop-target');
@@ -261,9 +345,13 @@ function setupTagDragging() {
             if (ghost) {
                 ghost.remove();
             }
+
+            draggedText = null;
+            activeRow = null;
+            activePointerId = null;
         }
     });
-};
+}
 
 function insertTagAtCursor(textarea, text) {
     const start = textarea.selectionStart;
