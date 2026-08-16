@@ -179,79 +179,102 @@ function setupTagDragging() {
     const textarea = document.getElementById('text-input');
 
     const DRAG_DELAY = 250;
-    const DRAG_DISTANCE = 8;
-
-    let draggedText = null;
-    let dragging = false;
-    let pendingDrag = false;
-
-    let dragTimer = null;
-    let startX = 0;
-    let startY = 0;
-    let activeRow = null;
-    let activePointerId = null;
+    const MOVE_THRESHOLD = 8;
+    const SCROLL_SPEED = 1.2;
 
     tagColumns.querySelectorAll('.row').forEach(row => {
+
+        let timer = null;
+        let dragging = false;
+        let pending = false;
+
+        let startX = 0;
+        let startY = 0;
+
+        let lastX = 0;
+        let lastY = 0;
+
+        let ghost = null;
+        let pointerId = null;
+
+        const column = row.closest('.tag-column');
 
         row.addEventListener('pointerdown', e => {
             if (e.pointerType === 'mouse' && e.button !== 0) {
                 return;
             }
 
-            activeRow = row;
-            activePointerId = e.pointerId;
+            pointerId = e.pointerId;
 
             startX = e.clientX;
             startY = e.clientY;
 
-            draggedText = row.dataset.text;
-            pendingDrag = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+
+            pending = true;
             dragging = false;
 
-            row.setPointerCapture(e.pointerId);
+            row.setPointerCapture(pointerId);
 
-            /*
-             * Mouse users get the drag immediately.
-             * Touch/stylus users must hold briefly before drag begins.
-             */
             if (e.pointerType === 'mouse') {
                 startDragging(e);
-            } else {
-                dragTimer = setTimeout(() => {
-                    if (pendingDrag && activeRow) {
-                        startDragging({
-                            clientX: startX,
-                            clientY: startY
-                        });
-                    }
-                }, DRAG_DELAY);
+                return;
             }
+
+            /*
+             * Mobile/stylus:
+             * wait before turning the gesture into a drag.
+             */
+            timer = setTimeout(() => {
+                if (pending) {
+                    startDragging({
+                        clientX: lastX,
+                        clientY: lastY
+                    });
+                }
+            }, DRAG_DELAY);
         });
 
         row.addEventListener('pointermove', e => {
-            if (!pendingDrag || e.pointerId !== activePointerId) {
+            if (!pending || e.pointerId !== pointerId) {
                 return;
             }
 
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
-            const distance = Math.hypot(dx, dy);
+
+            lastX = e.clientX;
+            lastY = e.clientY;
 
             /*
-             * If the user moves before the delay expires,
-             * assume they're trying to scroll rather than drag.
+             * Before dragging begins, interpret finger movement
+             * as scrolling the column.
              */
-            if (!dragging && distance > DRAG_DISTANCE) {
-                cancelPendingDrag();
-                return;
-            }
-
             if (!dragging) {
+
+                if (Math.abs(dx) > MOVE_THRESHOLD ||
+                    Math.abs(dy) > MOVE_THRESHOLD) {
+
+                    clearTimeout(timer);
+
+                    /*
+                     * Vertical movement scrolls the current column.
+                     */
+                    if (Math.abs(dy) > Math.abs(dx)) {
+                        column.scrollTop -= dy * SCROLL_SPEED;
+                    }
+
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+
                 return;
             }
 
-            const ghost = document.getElementById('drag-ghost');
-
+            /*
+             * Once dragging has started, move the ghost.
+             */
             if (ghost) {
                 ghost.style.left = `${e.clientX}px`;
                 ghost.style.top = `${e.clientY}px`;
@@ -262,10 +285,7 @@ function setupTagDragging() {
                 e.clientY
             );
 
-            if (
-                target === textarea ||
-                target?.closest('#text-input')
-            ) {
+            if (target === textarea || target?.closest('#text-input')) {
                 textarea.classList.add('drop-target');
             } else {
                 textarea.classList.remove('drop-target');
@@ -273,43 +293,45 @@ function setupTagDragging() {
         });
 
         row.addEventListener('pointerup', e => {
-            if (e.pointerId !== activePointerId) {
+            if (e.pointerId !== pointerId) {
                 return;
             }
 
-            clearTimeout(dragTimer);
+            clearTimeout(timer);
 
-            if (
-                dragging &&
-                (
-                    e.target === textarea ||
-                    document.elementFromPoint(
-                        e.clientX,
-                        e.clientY
-                    )?.closest('#text-input')
-                )
-            ) {
-                insertTagAtCursor(textarea, draggedText);
+            if (dragging) {
+                const target = document.elementFromPoint(
+                    e.clientX,
+                    e.clientY
+                );
+
+                if (
+                    target === textarea ||
+                    target?.closest('#text-input')
+                ) {
+                    insertTagAtCursor(
+                        textarea,
+                        row.dataset.text
+                    );
+                }
             }
 
-            finishDragging();
+            finish();
         });
 
-        row.addEventListener('pointercancel', () => {
-            finishDragging();
-        });
+        row.addEventListener('pointercancel', finish);
 
         function startDragging(e) {
-            pendingDrag = false;
+            pending = false;
             dragging = true;
 
-            activeRow.classList.add('dragging');
+            row.classList.add('dragging');
             document.body.classList.add('dragging');
 
-            const ghost = document.createElement('div');
+            ghost = document.createElement('div');
+
             ghost.className = 'drag-ghost';
-            ghost.id = 'drag-ghost';
-            ghost.textContent = draggedText;
+            ghost.textContent = row.dataset.text;
 
             document.body.appendChild(ghost);
 
@@ -317,38 +339,22 @@ function setupTagDragging() {
             ghost.style.top = `${e.clientY}px`;
         }
 
-        function cancelPendingDrag() {
-            clearTimeout(dragTimer);
+        function finish() {
+            clearTimeout(timer);
 
-            pendingDrag = false;
-            dragging = false;
-            draggedText = null;
-            activeRow = null;
-            activePointerId = null;
-        }
-
-        function finishDragging() {
-            clearTimeout(dragTimer);
-
-            pendingDrag = false;
+            pending = false;
             dragging = false;
 
-            if (activeRow) {
-                activeRow.classList.remove('dragging');
-            }
-
+            row.classList.remove('dragging');
             document.body.classList.remove('dragging');
             textarea.classList.remove('drop-target');
 
-            const ghost = document.getElementById('drag-ghost');
-
             if (ghost) {
                 ghost.remove();
+                ghost = null;
             }
 
-            draggedText = null;
-            activeRow = null;
-            activePointerId = null;
+            pointerId = null;
         }
     });
 }

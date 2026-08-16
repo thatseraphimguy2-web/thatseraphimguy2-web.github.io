@@ -312,6 +312,7 @@ button.primary.playing {
 
     cursor: grab;
     user-select: none;
+    touch-action: none;
 
     transition: background .12s;
 }
@@ -335,8 +336,16 @@ button.primary.playing {
     white-space: nowrap;
 }
 
-body.dragging .tag-column {
-    overflow: hidden;
+.tag-column {
+    min-width: 0;
+    height: 380px;
+    overflow-y: auto;
+
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel);
+
+    overscroll-behavior: contain;
 }
 
 .row.dragging {
