@@ -72,6 +72,16 @@ header p {
     margin: 0 0 14px;
 }
 
+.panel-hint {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+    opacity: 50%;
+}
+
 /*------------------------------Voices Grid------------------------------*/
 #voice-grid {
     display: grid;
