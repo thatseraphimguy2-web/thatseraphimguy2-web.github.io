@@ -211,11 +211,8 @@ textInput.addEventListener('dragover', e => {
 
 textInput.addEventListener('drop', e => {
   e.preventDefault();
-
   const text = e.dataTransfer.getData('text/plain');
-
   if (!text) return;
-
   insertTagAtCursor(textInput, text);
 });
 
@@ -326,11 +323,7 @@ previewBtn.addEventListener('click', () => {
     playPreview();
   }
 });
-
-textInput.addEventListener("dragover", e => {
-    e.preventDefault();
-});
-
+/*
 textInput.addEventListener("drop", e => {
   e.preventDefault();
   const text = e.dataTransfer.getData("text/plain");
@@ -352,7 +345,7 @@ textInput.addEventListener("drop", e => {
   updateCharcount();
   updateOutput();
 });
-
+*/
 textInput.addEventListener('input', () => { updateCharcount(); updateOutput(); });
 numberInput.addEventListener('input', updateOutput)
 formatInput.addEventListener('input', updateOutput);
